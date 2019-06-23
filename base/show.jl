@@ -1477,13 +1477,7 @@ function show_unquoted(io::IO, ex::Expr, indent::Int, prec::Int)
         unhandled = true
     end
     if unhandled
-        print(io, "\$(Expr(")
-        show(io, ex.head)
-        for arg in args
-            print(io, ", ")
-            show(io, arg)
-        end
-        print(io, "))")
+        show_call(io, :call, Symbol("@Ex"), [QuoteNode(ex.head), ex.args...], indent)
     end
     nothing
 end
