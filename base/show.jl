@@ -1007,7 +1007,13 @@ end
 ## AST printing ##
 
 show_unquoted(io::IO, val::SSAValue, ::Int, ::Int)      = print(io, "%", val.id)
-show_unquoted(io::IO, sym::Symbol, ::Int, ::Int)        = print(io, sym)
+function show_unquoted(io::IO, sym::Symbol, ::Int, ::Int)
+    if isidentifier(sym) || isoperator(sym)
+        print(io, sym)
+    else
+        print(io, "\$(Symbol(", repr(string(sym)), "))")
+    end
+end
 show_unquoted(io::IO, ex::LineNumberNode, ::Int, ::Int) = show_linenumber(io, ex.line, ex.file)
 show_unquoted(io::IO, ex::GotoNode, ::Int, ::Int)       = print(io, "goto %", ex.label)
 function show_unquoted(io::IO, ex::GlobalRef, ::Int, ::Int)
